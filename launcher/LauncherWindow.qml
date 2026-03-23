@@ -171,7 +171,12 @@ WlrLayershell {
                             }
 
                             if (currentPlugin && currentPlugin.handleKey) {
-                                currentPlugin.handleKey(event)
+                                currentPlugin.handleKey(event, {
+                                    top: topSlot.item,
+                                    left: leftSlot.item,
+                                    right: rightSlot.item,
+                                    bottom: bottomSlot.item
+                                })
                             }
                         }
                     }
