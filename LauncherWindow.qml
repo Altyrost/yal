@@ -12,13 +12,13 @@ PanelWindow {
     exclusionMode: ExclusionMode.Ignore
     color: "transparent"
 
-    width: 720
-    height: 460
+    implicitWidth: 720
+    implicitHeight: 460
 
     anchors.left: true
     anchors.top: true
-    margins.left: screen ? Math.max(0, Math.round((screen.width - width) / 2)) : 0
-    margins.top: screen ? Math.max(0, Math.round((screen.height - height) / 2)) : 0
+    margins.left: screen ? Math.max(0, Math.round((screen.width - implicitWidth) / 2)) : 0
+    margins.top: screen ? Math.max(0, Math.round((screen.height - implicitHeight) / 2)) : 0
 
     property var registry: PluginRegistry {}
     property var plugins: registry.plugins
