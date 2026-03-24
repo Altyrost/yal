@@ -5,11 +5,13 @@ import ".."
 BaseService {
     id: service
 
-    // "any" searches files and directories, "dir" searches directories only.
+    // "any" searches files and directories, "dir" searches directories only,
+    // and "file" searches files only.
     property string mode: "any"
     property int maxResults: 120
     property int minQueryLength: 2
     property string rootPath: "$HOME"
+    property var extensionFilters: []
 
     property var results: []
     property var bufferedPaths: []
@@ -40,30 +42,98 @@ BaseService {
     function typeFlags() {
         if (mode === "dir")
             return "--type d";
+        if (mode === "file")
+            return "--type f";
 
         return "";
     }
 
+    function normalizeExtension(extension) {
+        const normalized = (extension || "").trim().toLowerCase();
+        if (!normalized.length)
+            return "";
+
+        return normalized.startsWith(".") ? normalized.substring(1) : normalized;
+    }
+
+    function mergeExtensions(extraExtensions) {
+        const merged = [];
+        const seen = {};
+        const combined = (extensionFilters || []).concat(extraExtensions || []);
+
+        for (var i = 0; i < combined.length; ++i) {
+            const ext = normalizeExtension(combined[i]);
+            if (!ext.length || seen[ext])
+                continue;
+
+            seen[ext] = true;
+            merged.push(ext);
+        }
+
+        return merged;
+    }
+
+    function parseQuery(query) {
+        const raw = (query || "").trim();
+        const parts = raw.length ? raw.split(/\s+/) : [];
+        const searchTerms = [];
+        const inlineExtensions = [];
+
+        for (var i = 0; i < parts.length; ++i) {
+            const part = parts[i];
+            const match = part.match(/^(?:ext|extension):(.+)$/i);
+            if (!match) {
+                searchTerms.push(part);
+                continue;
+            }
+
+            const values = (match[1] || "").split(",");
+            for (var j = 0; j < values.length; ++j) {
+                const ext = normalizeExtension(values[j]);
+                if (ext.length)
+                    inlineExtensions.push(ext);
+            }
+        }
+
+        return {
+            searchText: searchTerms.join(" ").trim(),
+            extensions: mergeExtensions(inlineExtensions)
+        };
+    }
+
+    function extensionFlags(extensions) {
+        if (mode === "dir" || !extensions || extensions.length === 0)
+            return "";
+
+        return extensions.map(ext => "-e " + shellQuote(ext)).join(" ");
+    }
+
     function buildSearchCommand(query) {
-        const q = shellQuote(query);
+        const parsed = parseQuery(query);
+        const q = shellQuote(parsed.searchText);
         const limit = String(maxResults);
         const flags = typeFlags();
+        const extFlags = extensionFlags(parsed.extensions);
+        const matcher = parsed.searchText.length ? " | fzf --filter " + q : "";
 
         return ""
-            + "fd " + flags + " --hidden --exclude .git . \"" + rootPath + "\" "
-            + "| fzf --filter " + q + " "
+            + "fd " + flags + " " + extFlags + " --hidden --exclude .git . \"" + rootPath + "\" "
+            + matcher
             + "| head -n " + limit;
     }
 
     function executeSearch(query) {
         const q = (query || "").trim();
+        const parsed = parseQuery(q);
         activeQuery = q;
         bufferedPaths = [];
 
         if (searcher.running)
             searcher.running = false;
 
-        if (q.length === 0 || q.length < minQueryLength) {
+        const hasExtensionFilter = parsed.extensions.length > 0;
+        if ((parsed.searchText.length === 0 && !hasExtensionFilter)
+            || (parsed.searchText.length > 0 && parsed.searchText.length < minQueryLength)) {
             results = [];
             return;
         }
