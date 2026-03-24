@@ -2,6 +2,7 @@ import QtQuick
 
 QtObject {
     property string pluginId: ""
+    property string bang: ""
     required property string displayName
     property string query: ""
 

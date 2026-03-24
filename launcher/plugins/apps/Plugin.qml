@@ -10,6 +10,7 @@ BasePlugin {
     id: plugin
 
     pluginId: "apps"
+    bang: "!a"
     displayName: "Apps"
 
     function launchApp(app) {

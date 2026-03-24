@@ -24,9 +24,68 @@ WlrLayershell {
     property int currentPluginIndex: 0
     property var currentPlugin: plugins.length > 0 ? plugins[currentPluginIndex] : null
     property string query: ""
+    property bool suppressInputTextChange: false
 
     function closeLauncher() {
         Qt.quit();
+    }
+
+    function findPluginIndexById(pluginId) {
+        for (var i = 0; i < plugins.length; ++i) {
+            if (plugins[i] && plugins[i].pluginId === pluginId)
+                return i;
+        }
+
+        return -1;
+    }
+
+    function switchToPluginById(pluginId) {
+        const index = findPluginIndexById(pluginId);
+        if (index < 0)
+            return false;
+
+        activatePlugin(index);
+        return true;
+    }
+
+    function findPluginIndexByBang(bang) {
+        const normalizedBang = (bang || "").trim().toLowerCase();
+        if (!normalizedBang.length)
+            return -1;
+
+        for (var i = 0; i < plugins.length; ++i) {
+            const plugin = plugins[i];
+            if (!plugin || !plugin.bang)
+                continue;
+
+            if (plugin.bang.toLowerCase() === normalizedBang)
+                return i;
+        }
+
+        return -1;
+    }
+
+    function consumeModeCommand(textValue) {
+        const inputText = textValue || "";
+        const match = inputText.match(/^\s*(![^\s]+)\s*(.*)$/i);
+        if (!match)
+            return false;
+
+        const bang = (match[1] || "").toLowerCase();
+        const remaining = (match[2] || "").trim();
+        const targetPluginIndex = findPluginIndexByBang(bang);
+        if (targetPluginIndex < 0)
+            return false;
+
+        activatePlugin(targetPluginIndex);
+
+        suppressInputTextChange = true;
+        input.text = remaining;
+        suppressInputTextChange = false;
+
+        query = remaining;
+        syncPluginQuery();
+        return true;
     }
 
     Connections {
@@ -153,6 +212,12 @@ WlrLayershell {
                         background: Item {}
 
                         onTextChanged: {
+                            if (root.suppressInputTextChange)
+                                return;
+
+                            if (root.consumeModeCommand(text))
+                                return;
+
                             root.query = text;
                             root.syncPluginQuery();
                         }
