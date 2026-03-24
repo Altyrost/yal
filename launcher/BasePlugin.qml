@@ -37,9 +37,10 @@ QtObject {
         dispatchKeyToViews(event, [views.top, views.left, views.right, views.bottom]);
     }
 
-    function onActivated() {}
+    function onActivated() {
+    }
 
     function onQueryChanged(newQuery) {
-        query = newQuery
+        query = newQuery;
     }
 }

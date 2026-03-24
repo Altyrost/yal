@@ -26,14 +26,14 @@ WlrLayershell {
     property string query: ""
 
     function closeLauncher() {
-        Qt.quit()
+        Qt.quit();
     }
 
     Connections {
         target: root.currentPlugin
 
         function onRequestClose() {
-            root.closeLauncher()
+            root.closeLauncher();
         }
 
         function onRequestClear() {
@@ -42,38 +42,36 @@ WlrLayershell {
 
     function syncPluginQuery() {
         if (!currentPlugin)
-            return
-
-        currentPlugin.query = query
+            return;
+        currentPlugin.query = query;
         if (currentPlugin.onQueryChanged)
-            currentPlugin.onQueryChanged(query)
+            currentPlugin.onQueryChanged(query);
     }
 
     function activatePlugin(index) {
         if (index < 0 || index >= plugins.length)
-            return
-
-        currentPluginIndex = index
+            return;
+        currentPluginIndex = index;
 
         if (currentPlugin && currentPlugin.onActivated)
-            currentPlugin.onActivated()
+            currentPlugin.onActivated();
 
-        syncPluginQuery()
+        syncPluginQuery();
     }
 
     Component.onCompleted: {
         if (currentPlugin && currentPlugin.onActivated)
-            currentPlugin.onActivated()
+            currentPlugin.onActivated();
 
-        syncPluginQuery()
-        input.forceActiveFocus()
+        syncPluginQuery();
+        input.forceActiveFocus();
     }
 
     onCurrentPluginChanged: {
         if (currentPlugin && currentPlugin.onActivated)
-            currentPlugin.onActivated()
+            currentPlugin.onActivated();
 
-        syncPluginQuery()
+        syncPluginQuery();
     }
 
     Rectangle {
@@ -92,17 +90,12 @@ WlrLayershell {
         Loader {
             id: topSlot
             anchors.top: parent.top
-            anchors.left: anchorRow.left
-            anchors.right: anchorRow.right
+            anchors.left: parent.left
+            anchors.right: parent.right
             sourceComponent: root.currentPlugin ? root.currentPlugin.topView : null
 
             visible: item !== null
             active: sourceComponent !== null
-
-            onLoaded: {
-                if (item && item.implicitHeight > 0)
-                    item.height = item.implicitHeight
-            }
         }
 
         Rectangle {
@@ -160,23 +153,23 @@ WlrLayershell {
                         background: Item {}
 
                         onTextChanged: {
-                            root.query = text
-                            root.syncPluginQuery()
+                            root.query = text;
+                            root.syncPluginQuery();
                         }
 
-                        Keys.onPressed: (event) => {
+                        Keys.onPressed: event => {
                             if (event.key === Qt.Key_Escape) {
-                                Qt.quit()
-                                event.accepted = true
+                                Qt.quit();
+                                event.accepted = true;
                             }
 
-                            if (currentPlugin && currentPlugin.handleKey) {
-                                currentPlugin.handleKey(event, {
+                            if (root.currentPlugin && root.currentPlugin.handleKey) {
+                                root.currentPlugin.handleKey(event, {
                                     top: topSlot.item,
                                     left: leftSlot.item,
                                     right: rightSlot.item,
                                     bottom: bottomSlot.item
-                                })
+                                });
                             }
                         }
                     }
@@ -194,11 +187,6 @@ WlrLayershell {
 
             visible: item !== null
             active: sourceComponent !== null
-
-            onLoaded: {
-                if (item && item.implicitWidth > 0)
-                    item.width = item.implicitWidth
-            }
         }
 
         Loader {
@@ -211,11 +199,6 @@ WlrLayershell {
 
             visible: item !== null
             active: sourceComponent !== null
-
-            onLoaded: {
-                if (item && item.implicitWidth > 0)
-                    item.width = item.implicitWidth
-            }
         }
 
         Loader {

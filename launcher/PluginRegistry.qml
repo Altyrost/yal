@@ -1,8 +1,8 @@
 import QtQuick
-import "plugins"
+import "plugins/apps" as Apps
 
 QtObject {
     readonly property list<QtObject> plugins: [
-        AppsPlugin {}
+        Apps.Plugin {}
     ]
 }
