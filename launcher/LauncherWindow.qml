@@ -67,7 +67,7 @@ WlrLayershell {
 
     function consumeModeCommand(textValue) {
         const inputText = textValue || "";
-        const match = inputText.match(/^\s*(![^\s]+)\s*(.*)$/i);
+        const match = inputText.match(/^\s*(![^\s]+)\s+(.*)$/i);
         if (!match)
             return false;
 
