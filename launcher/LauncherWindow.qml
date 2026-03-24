@@ -16,8 +16,10 @@ WlrLayershell {
     width: 720
     height: 460
 
+    anchors.left: true
     anchors.top: true
-    margins.top: 180
+    margins.left: screen ? Math.max(0, Math.round((screen.width - width) / 2)) : 0
+    margins.top: screen ? Math.max(0, Math.round((screen.height - height) / 2)) : 0
 
     property var registry: PluginRegistry {}
     property var plugins: registry.plugins
