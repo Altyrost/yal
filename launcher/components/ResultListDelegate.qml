@@ -23,9 +23,16 @@ ItemDelegate {
 
     signal activated(var item)
 
+    function selectItem() {
+        if (ListView.view)
+            ListView.view.currentIndex = root.index;
+    }
+
     width: ListView.view ? ListView.view.width : 0
     height: delegateHeight
     highlighted: ListView.isCurrentItem
+    hoverEnabled: true
+    focusPolicy: Qt.NoFocus
 
     background: Rectangle {
         anchors.fill: parent
@@ -54,19 +61,21 @@ ItemDelegate {
         }
     }
 
-    onClicked: {
-        if (ListView.view)
-            ListView.view.currentIndex = root.index;
+    TapHandler {
+        acceptedButtons: Qt.LeftButton
 
-        root.activated(modelData);
+        onTapped: {
+            root.selectItem();
+            root.activated(root.modelData);
+        }
     }
 
     HoverHandler {
         enabled: root.followHover
 
         onHoveredChanged: {
-            if (hovered && ListView.view)
-                ListView.view.currentIndex = root.index;
+            if (hovered)
+                root.selectItem();
         }
     }
 }

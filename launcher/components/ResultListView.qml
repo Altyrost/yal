@@ -63,5 +63,10 @@ Rectangle {
             if (root.autoSelectFirst)
                 currentIndex = count > 0 ? 0 : -1;
         }
+
+        onCurrentIndexChanged: {
+            if (currentIndex >= 0)
+                positionViewAtIndex(currentIndex, ListView.Contain);
+        }
     }
 }
