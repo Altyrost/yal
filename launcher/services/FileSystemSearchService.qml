@@ -1,12 +1,15 @@
 import QtQuick
 import Quickshell.Io
-import "../../"
+import "../"
 
 BaseService {
     id: service
 
+    // "any" searches files and directories, "dir" searches directories only.
+    property string mode: "any"
     property int maxResults: 120
     property int minQueryLength: 2
+    property string rootPath: "$HOME"
 
     property var results: []
     property var bufferedPaths: []
@@ -34,11 +37,22 @@ BaseService {
         };
     }
 
+    function typeFlags() {
+        if (mode === "dir")
+            return "--type d";
+
+        return "";
+    }
+
     function buildSearchCommand(query) {
         const q = shellQuote(query);
         const limit = String(maxResults);
+        const flags = typeFlags();
 
-        return "" + "fd --type d --hidden --exclude .git . \"$HOME\" " + "| fzf --filter " + q + " " + "| head -n " + limit;
+        return ""
+            + "fd " + flags + " --hidden --exclude .git . \"" + rootPath + "\" "
+            + "| fzf --filter " + q + " "
+            + "| head -n " + limit;
     }
 
     function executeSearch(query) {
@@ -79,7 +93,7 @@ BaseService {
         stdout: SplitParser {
             splitMarker: "\n"
 
-            onRead: function (data) {
+            onRead: function(data) {
                 const path = (data || "").trim();
                 if (path.length === 0)
                     return;
@@ -91,7 +105,7 @@ BaseService {
             }
         }
 
-        onExited: function () {
+        onExited: function() {
             if (service.activeQuery !== service.lastRequestedQuery)
                 return;
 

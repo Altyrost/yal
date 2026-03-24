@@ -1,9 +1,9 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 
-import "."
 import "../.."
 import "../../components"
+import "../../services"
 
 BasePlugin {
     id: plugin
@@ -11,7 +11,10 @@ BasePlugin {
     pluginId: "files"
     bang: "!f"
     displayName: "File"
-    property var fileService: Service {}
+
+    property var fileService: FileSystemSearchService {
+        mode: "any"
+    }
 
     function openFile(fileItem) {
         if (!fileItem || !fileItem.path)

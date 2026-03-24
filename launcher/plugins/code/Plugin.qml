@@ -2,9 +2,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Io
 
-import "."
 import "../.."
 import "../../components"
+import "../../services"
 
 BasePlugin {
     id: plugin
@@ -12,7 +12,10 @@ BasePlugin {
     pluginId: "code"
     bang: "!c"
     displayName: "Code"
-    property var codeService: Service {}
+
+    property var codeService: FileSystemSearchService {
+        mode: "dir"
+    }
 
     function openInCode(item) {
         if (!item || !item.path)
