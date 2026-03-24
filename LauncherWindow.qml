@@ -1,15 +1,14 @@
 import Quickshell
-import Quickshell.Wayland
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-WlrLayershell {
+PanelWindow {
     id: root
 
     visible: true
-    layer: WlrLayer.Overlay
-    keyboardFocus: WlrKeyboardFocus.OnDemand
+    aboveWindows: true
+    focusable: true
     exclusionMode: ExclusionMode.Ignore
     color: "transparent"
 
