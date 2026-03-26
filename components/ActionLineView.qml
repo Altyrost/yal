@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 
 ResultListView {
@@ -12,7 +14,7 @@ ResultListView {
         showIcon: false
         title: root.actionText
 
-        onActivated: function(item) {
+        onActivated: function (item) {
             root.activateRequested(item);
         }
     }
