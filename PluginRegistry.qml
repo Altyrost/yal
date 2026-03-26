@@ -13,7 +13,7 @@ import "plugins/web/qt" as QtDocs
 
 QtObject {
     id: root
-    required property var parent
+    required property var controller
 
     readonly property list<QtObject> plugins: [
         Apps.Plugin {},
@@ -21,7 +21,7 @@ QtObject {
             id: bangPlugin
             availablePlugins: root.plugins
             onRequestSwitchPlugin: function (pluginId) {
-                root.parent.switchToPluginById(pluginId);
+                root.controller.switchToPluginById(pluginId);
             }
         },
         Code.Plugin {},

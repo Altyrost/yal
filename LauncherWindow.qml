@@ -20,76 +20,12 @@ PanelWindow {
     margins.left: screen ? Math.max(0, Math.round((screen.width - implicitWidth) / 2)) : 0
     margins.top: screen ? Math.max(0, Math.round((screen.height - implicitHeight) / 2)) : 0
 
-    property var registry: PluginRegistry {
-        parent: root
-    }
-
-    property var plugins: registry.plugins
-    property int currentPluginIndex: 0
-    property var currentPlugin: plugins.length > 0 ? plugins[currentPluginIndex] : null
-    property string query: ""
+    property var controller: LauncherController {}
+    readonly property var currentPlugin: controller.currentPlugin
     property bool suppressInputTextChange: false
 
     function closeLauncher() {
         Qt.quit();
-    }
-
-    function findPluginIndexById(pluginId) {
-        for (var i = 0; i < plugins.length; ++i) {
-            if (plugins[i] && plugins[i].pluginId === pluginId)
-                return i;
-        }
-
-        return -1;
-    }
-
-    function switchToPluginById(pluginId) {
-        const index = findPluginIndexById(pluginId);
-        if (index < 0)
-            return false;
-
-        activatePlugin(index);
-        return true;
-    }
-
-    function findPluginIndexByBang(bang) {
-        const normalizedBang = (bang || "").trim().toLowerCase();
-        if (!normalizedBang.length)
-            return -1;
-
-        for (var i = 0; i < plugins.length; ++i) {
-            const plugin = plugins[i];
-            if (!plugin || !plugin.bang)
-                continue;
-
-            if (plugin.bang.toLowerCase() === normalizedBang)
-                return i;
-        }
-
-        return -1;
-    }
-
-    function consumeModeCommand(textValue) {
-        const inputText = textValue || "";
-        const match = inputText.match(/^\s*(!.*?)\s+(.*)$/i);
-        if (!match)
-            return false;
-
-        const bang = (match[1] || "").toLowerCase();
-        const remaining = (match[2] || "").trim();
-        const targetPluginIndex = findPluginIndexByBang(bang);
-        if (targetPluginIndex < 0)
-            return false;
-
-        activatePlugin(targetPluginIndex);
-
-        suppressInputTextChange = true;
-        input.text = remaining;
-        suppressInputTextChange = false;
-
-        query = remaining;
-        syncPluginQuery();
-        return true;
     }
 
     Connections {
@@ -103,38 +39,18 @@ PanelWindow {
         }
     }
 
-    function syncPluginQuery() {
-        if (!currentPlugin)
-            return;
-        currentPlugin.query = query;
-        if (currentPlugin.onQueryChanged)
-            currentPlugin.onQueryChanged(query);
-    }
+    Connections {
+        target: root.controller
 
-    function activatePlugin(index) {
-        if (index < 0 || index >= plugins.length)
-            return;
-        currentPluginIndex = index;
-
-        if (currentPlugin && currentPlugin.onActivated)
-            currentPlugin.onActivated();
-
-        syncPluginQuery();
+        function onRequestInputTextUpdate(text) {
+            root.suppressInputTextChange = true;
+            input.text = text;
+            root.suppressInputTextChange = false;
+        }
     }
 
     Component.onCompleted: {
-        if (currentPlugin && currentPlugin.onActivated)
-            currentPlugin.onActivated();
-
-        syncPluginQuery();
         input.forceActiveFocus();
-    }
-
-    onCurrentPluginChanged: {
-        if (currentPlugin && currentPlugin.onActivated)
-            currentPlugin.onActivated();
-
-        syncPluginQuery();
     }
 
     Rectangle {
@@ -219,11 +135,10 @@ PanelWindow {
                             if (root.suppressInputTextChange)
                                 return;
 
-                            if (root.consumeModeCommand(text))
+                            if (root.controller.consumeModeCommand(text))
                                 return;
 
-                            root.query = text;
-                            root.syncPluginQuery();
+                            root.controller.setQuery(text);
                         }
 
                         Keys.onPressed: event => {
