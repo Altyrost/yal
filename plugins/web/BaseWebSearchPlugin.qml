@@ -16,7 +16,7 @@ BasePlugin {
 
     function searchLabel() {
         const text = trimmedQuery();
-        return text.length ? "Search " + text + " on " + searchEngineName : "Search on " + searchEngineName;
+        return text.length ? "Search \"" + text + "\" on " + searchEngineName : "Search on " + searchEngineName;
     }
 
     function searchItem() {
@@ -38,7 +38,7 @@ BasePlugin {
             actionText: plugin.searchLabel()
             itemData: plugin.searchItem()
 
-            onActivateRequested: function(item) {
+            onActivateRequested: function (item) {
                 plugin.openSearch(item);
             }
         }
