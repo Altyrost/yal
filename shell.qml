@@ -7,11 +7,11 @@ ShellRoot {
 
         property var controller: LauncherController {}
         property int centerWidth: 720
-        property int centerHeight: 80
-        property int contentHeight: 360
-        property int sideWidth: 220
-        property int topHeight: 220
-        property int gap: 10
+        property int centerHeight: 48
+        property int defaultContentHeight: 284
+        property int defaultSideWidth: 220
+        property int defaultTopHeight: 440
+        property int gap: 6
 
         property var topViewItem: null
         property var leftViewItem: null

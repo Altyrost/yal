@@ -8,6 +8,10 @@ Rectangle {
     property alias delegate: listView.delegate
     property alias view: listView
     property bool autoSelectFirst: true
+    property int maxVisibleItems: 6
+    property real rowHeight: 42
+    readonly property int visibleItemCount: Math.min(listView.count, maxVisibleItems)
+    implicitHeight: visibleItemCount > 0 ? (visibleItemCount * rowHeight) + (Math.max(0, visibleItemCount - 1) * listView.spacing) : 0
     signal activateRequested(var item)
 
     function currentItemData() {

@@ -17,12 +17,12 @@ PanelWindow {
     color: "transparent"
     WlrLayershell.namespace: "yal-launcher-bottom"
 
-    implicitWidth: shellState.centerWidth
-    implicitHeight: shellState.contentHeight
+    implicitWidth: Math.round(contentLoader.item && contentLoader.item.implicitWidth !== undefined && contentLoader.item.implicitWidth > 0 ? contentLoader.item.implicitWidth : shellState.centerWidth)
+    implicitHeight: Math.round(contentLoader.item && contentLoader.item.implicitHeight !== undefined ? contentLoader.item.implicitHeight : shellState.defaultContentHeight)
 
     anchors.left: true
     anchors.top: true
-    margins.left: shellState.centerLeft(screen)
+    margins.left: shellState.centerLeft(screen) + Math.round((shellState.centerWidth - root.implicitWidth) / 2)
     margins.top: shellState.centerTop(screen) + shellState.centerHeight + shellState.gap
 
     Rectangle {
@@ -35,12 +35,13 @@ PanelWindow {
     Loader {
         id: contentLoader
         anchors.fill: parent
-        anchors.margins: 16
         sourceComponent: root.currentPlugin ? root.currentPlugin.bottomView : null
         active: sourceComponent !== null
 
         onItemChanged: {
             root.shellState.bottomViewItem = item;
+            if (item)
+                item.anchors.fill = contentLoader;
         }
     }
 }

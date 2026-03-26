@@ -16,22 +16,16 @@ PanelWindow {
     WlrLayershell.namespace: "yal-launcher-top"
 
     readonly property var currentPlugin: controller.currentPlugin
-    readonly property int topViewHeight: Math.round(previewLoader.item && previewLoader.item.implicitHeight ? previewLoader.item.implicitHeight : 0)
+    readonly property int topViewWidth: Math.round(previewLoader.item && previewLoader.item.implicitWidth !== undefined && previewLoader.item.implicitWidth > 0 ? previewLoader.item.implicitWidth : shellState.centerWidth)
+    readonly property int topViewHeight: Math.round(previewLoader.item && previewLoader.item.implicitHeight !== undefined ? previewLoader.item.implicitHeight : 0)
 
-    implicitWidth: shellState.centerWidth
-    implicitHeight: shellState.topHeight
+    implicitWidth: topViewWidth
+    implicitHeight: topViewHeight
 
     anchors.left: true
     anchors.top: true
-    margins.left: shellState.centerLeft(screen)
-    margins.top: shellState.centerTop(screen) - shellState.gap - shellState.topHeight
-
-    mask: Region {
-        x: 0
-        y: root.height - root.topViewHeight
-        width: root.width
-        height: root.topViewHeight
-    }
+    margins.left: shellState.centerLeft(screen) + Math.round((shellState.centerWidth - root.implicitWidth) / 2)
+    margins.top: shellState.centerTop(screen) - shellState.gap - root.implicitHeight
 
     Rectangle {
         anchors.fill: parent
@@ -43,7 +37,6 @@ PanelWindow {
     Loader {
         id: previewLoader
         anchors.fill: parent
-        anchors.margins: 16
         sourceComponent: root.currentPlugin ? root.currentPlugin.topView : null
         active: sourceComponent !== null
         visible: root.topViewHeight > 0
