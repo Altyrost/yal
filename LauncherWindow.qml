@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Wayland
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -6,21 +7,27 @@ import QtQuick.Layouts
 PanelWindow {
     id: root
 
+    property var controller: LauncherController {}
+    required property QtObject shellState
+
     visible: true
     aboveWindows: true
     focusable: true
     exclusionMode: ExclusionMode.Ignore
     color: "transparent"
+    WlrLayershell.namespace: "yal-launcher"
 
-    implicitWidth: 720
-    implicitHeight: 460
+    property real baseImplicitWidth: shellState.centerWidth
+    property real baseImplicitHeight: shellState.centerHeight
+
+    implicitWidth: baseImplicitWidth
+    implicitHeight: baseImplicitHeight
 
     anchors.left: true
     anchors.top: true
-    margins.left: screen ? Math.max(0, Math.round((screen.width - implicitWidth) / 2)) : 0
-    margins.top: screen ? Math.max(0, Math.round((screen.height - implicitHeight) / 2)) : 0
+    margins.left: shellState.centerLeft(screen)
+    margins.top: shellState.centerTop(screen)
 
-    property var controller: LauncherController {}
     readonly property var currentPlugin: controller.currentPlugin
     property bool suppressInputTextChange: false
 
@@ -66,21 +73,9 @@ PanelWindow {
         anchors.fill: parent
         anchors.margins: 16
 
-        Loader {
-            id: topSlot
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            sourceComponent: root.currentPlugin ? root.currentPlugin.topView : null
-
-            visible: item !== null
-            active: sourceComponent !== null
-        }
-
         Rectangle {
             id: inputBar
-            anchors.top: topSlot.visible ? topSlot.bottom : parent.top
-            anchors.topMargin: topSlot.visible ? 10 : 0
+            anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             height: 48
@@ -149,55 +144,16 @@ PanelWindow {
 
                             if (root.currentPlugin && root.currentPlugin.handleKey) {
                                 root.currentPlugin.handleKey(event, {
-                                    top: topSlot.item,
-                                    left: leftSlot.item,
-                                    right: rightSlot.item,
-                                    bottom: bottomSlot.item
+                                    top: root.shellState.topViewItem,
+                                    left: root.shellState.leftViewItem,
+                                    right: root.shellState.rightViewItem,
+                                    bottom: root.shellState.bottomViewItem
                                 });
                             }
                         }
                     }
                 }
             }
-        }
-
-        Loader {
-            id: leftSlot
-            anchors.top: inputBar.bottom
-            anchors.topMargin: 10
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-            sourceComponent: root.currentPlugin ? root.currentPlugin.leftView : null
-
-            visible: item !== null
-            active: sourceComponent !== null
-        }
-
-        Loader {
-            id: rightSlot
-            anchors.top: inputBar.bottom
-            anchors.topMargin: 10
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            sourceComponent: root.currentPlugin ? root.currentPlugin.rightView : null
-
-            visible: item !== null
-            active: sourceComponent !== null
-        }
-
-        Loader {
-            id: bottomSlot
-            anchors.top: inputBar.bottom
-            anchors.topMargin: 10
-            anchors.left: leftSlot.visible ? leftSlot.right : parent.left
-            anchors.leftMargin: leftSlot.visible ? 10 : 0
-            anchors.right: rightSlot.visible ? rightSlot.left : parent.right
-            anchors.rightMargin: rightSlot.visible ? 10 : 0
-            anchors.bottom: parent.bottom
-            sourceComponent: root.currentPlugin ? root.currentPlugin.bottomView : null
-
-            visible: item !== null
-            active: sourceComponent !== null
         }
     }
 }
