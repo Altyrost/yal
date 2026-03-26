@@ -3,6 +3,7 @@ import "plugins/apps" as Apps
 import "plugins/code" as Code
 import "plugins/files" as Files
 import "plugins/images" as Images
+import "plugins/tools/bangs" as Bangs
 import "plugins/tools/calc" as Calc
 import "plugins/web/google" as Google
 import "plugins/web/youtube" as Youtube
@@ -11,8 +12,18 @@ import "plugins/web/cpp" as Cpp
 import "plugins/web/qt" as QtDocs
 
 QtObject {
+    id: root
+    required property var parent
+
     readonly property list<QtObject> plugins: [
         Apps.Plugin {},
+        Bangs.Plugin {
+            id: bangPlugin
+            availablePlugins: root.plugins
+            onRequestSwitchPlugin: function (pluginId) {
+                root.parent.switchToPluginById(pluginId);
+            }
+        },
         Code.Plugin {},
         Files.Plugin {},
         Images.Plugin {},

@@ -20,7 +20,10 @@ PanelWindow {
     margins.left: screen ? Math.max(0, Math.round((screen.width - implicitWidth) / 2)) : 0
     margins.top: screen ? Math.max(0, Math.round((screen.height - implicitHeight) / 2)) : 0
 
-    property var registry: PluginRegistry {}
+    property var registry: PluginRegistry {
+        parent: root
+    }
+
     property var plugins: registry.plugins
     property int currentPluginIndex: 0
     property var currentPlugin: plugins.length > 0 ? plugins[currentPluginIndex] : null
@@ -68,7 +71,7 @@ PanelWindow {
 
     function consumeModeCommand(textValue) {
         const inputText = textValue || "";
-        const match = inputText.match(/^\s*(![^\s]+)\s+(.*)$/i);
+        const match = inputText.match(/^\s*(!.*?)\s+(.*)$/i);
         if (!match)
             return false;
 
