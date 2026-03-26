@@ -17,8 +17,8 @@ PanelWindow {
     color: "transparent"
     WlrLayershell.namespace: "yal-launcher-right"
 
-    implicitWidth: shellState.sideWidth
-    implicitHeight: shellState.contentHeight
+    implicitWidth: Math.round(contentLoader.item && contentLoader.item.implicitWidth !== undefined && contentLoader.item.implicitWidth > 0 ? contentLoader.item.implicitWidth : shellState.defaultSideWidth)
+    implicitHeight: Math.round(contentLoader.item && contentLoader.item.implicitHeight !== undefined ? contentLoader.item.implicitHeight : shellState.defaultContentHeight)
 
     anchors.left: true
     anchors.top: true
@@ -35,12 +35,13 @@ PanelWindow {
     Loader {
         id: contentLoader
         anchors.fill: parent
-        anchors.margins: 16
         sourceComponent: root.currentPlugin ? root.currentPlugin.rightView : null
         active: sourceComponent !== null
 
         onItemChanged: {
             root.shellState.rightViewItem = item;
+            if (item)
+                item.anchors.fill = contentLoader;
         }
     }
 }
