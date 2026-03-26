@@ -3,8 +3,8 @@ import "plugins/apps" as Apps
 import "plugins/code" as Code
 import "plugins/files" as Files
 import "plugins/images" as Images
-import "plugins/tools/bangs" as Bangs
-import "plugins/tools/calc" as Calc
+import "plugins/bangs" as Bangs
+import "plugins/calc" as Calc
 import "plugins/web/google" as Google
 import "plugins/web/youtube" as Youtube
 import "plugins/web/wikipedia" as Wikipedia
