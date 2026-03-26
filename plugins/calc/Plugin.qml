@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 import Quickshell
 import QtQuick
 
-import "../../.."
-import "../../../components"
+import "../.."
+import "../../components"
 
 BasePlugin {
     id: plugin
@@ -19,31 +19,11 @@ BasePlugin {
     }
 
     function normalizedExpression(query) {
-        return (query || "")
-            .replace(/,/g, ".")
-            .replace(/×/g, "*")
-            .replace(/÷/g, "/")
-            .replace(/\bpi\b/gi, "Math.PI")
-            .replace(/\be\b/g, "Math.E")
-            .replace(/\babs\b/gi, "Math.abs")
-            .replace(/\bsqrt\b/gi, "Math.sqrt")
-            .replace(/\bsin\b/gi, "Math.sin")
-            .replace(/\bcos\b/gi, "Math.cos")
-            .replace(/\btan\b/gi, "Math.tan")
-            .replace(/\bpow\b/gi, "Math.pow")
-            .replace(/\blog\b/gi, "Math.log")
-            .replace(/\bexp\b/gi, "Math.exp")
-            .replace(/\bfloor\b/gi, "Math.floor")
-            .replace(/\bceil\b/gi, "Math.ceil")
-            .replace(/\bround\b/gi, "Math.round")
-            .replace(/\bmin\b/gi, "Math.min")
-            .replace(/\bmax\b/gi, "Math.max");
+        return (query || "").replace(/,/g, ".").replace(/×/g, "*").replace(/÷/g, "/").replace(/\bpi\b/gi, "Math.PI").replace(/\be\b/g, "Math.E").replace(/\babs\b/gi, "Math.abs").replace(/\bsqrt\b/gi, "Math.sqrt").replace(/\bsin\b/gi, "Math.sin").replace(/\bcos\b/gi, "Math.cos").replace(/\btan\b/gi, "Math.tan").replace(/\bpow\b/gi, "Math.pow").replace(/\blog\b/gi, "Math.log").replace(/\bexp\b/gi, "Math.exp").replace(/\bfloor\b/gi, "Math.floor").replace(/\bceil\b/gi, "Math.ceil").replace(/\bround\b/gi, "Math.round").replace(/\bmin\b/gi, "Math.min").replace(/\bmax\b/gi, "Math.max");
     }
 
     function isAllowedExpression(expression) {
-        return /^[0-9\s+\-*/%().,]*([A-Za-z_][A-Za-z0-9_\.(),\s+\-*/%]*)?$/.test(expression)
-            && !/[=;:{}\[\]\\'"`?]/.test(expression)
-            && expression.indexOf("Math.Math") === -1;
+        return /^[0-9\s+\-*/%().,]*([A-Za-z_][A-Za-z0-9_\.(),\s+\-*/%]*)?$/.test(expression) && !/[=;:{}\[\]\\'"`?]/.test(expression) && expression.indexOf("Math.Math") === -1;
     }
 
     function evaluateExpression(query) {
@@ -107,7 +87,7 @@ BasePlugin {
             actionText: plugin.evaluation.text
             itemData: plugin.resultItem()
 
-            onActivateRequested: function(item) {
+            onActivateRequested: function (item) {
                 plugin.activateResult(item);
             }
         }
