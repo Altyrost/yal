@@ -1,21 +1,17 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 
-import "../.."
 import "../../components"
-import "../../services"
+import "../file_search"
 
-BasePlugin {
+BaseFileSearchPlugin {
     id: plugin
 
     pluginId: "images"
     bang: "!i"
     displayName: "Images"
-
-    property var imageService: FileSystemSearchService {
-        mode: "file"
-        extensionFilters: ["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg", "avif", "heic", "heif", "tiff", "tif"]
-    }
+    searchMode: "file"
+    searchExtensionFilters: ["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg", "avif", "heic", "heif", "tiff", "tif"]
     property var previewItem: null
 
     function imageSource(imageItem) {
@@ -34,15 +30,11 @@ BasePlugin {
         requestClear();
     }
 
-    function onQueryChanged(newQuery) {
-        imageService.search(newQuery);
-    }
-
     topView: Component {
         DirectionnalItem {
             fillWidth: true
             fillHeight: true
-            visible: plugin.previewItem !== null
+            visible: plugin.previewItem !== null && !plugin.dependencyError.length
             clip: true
 
             Image {
@@ -56,43 +48,16 @@ BasePlugin {
         }
     }
 
-    bottomView: Component {
-        ResultListView {
-            id: resultsView
-            model: plugin.imageService.results
+    function activateSearchResult(item) {
+        plugin.openImage(item);
+    }
 
-            function syncPreview() {
-                plugin.previewItem = currentItemData();
-            }
+    function onSearchCurrentItemChanged(item) {
+        plugin.previewItem = item;
+    }
 
-            onActivateRequested: function (item) {
-                plugin.openImage(item);
-            }
-
-            Component.onCompleted: {
-                syncPreview();
-            }
-
-            Connections {
-                target: resultsView.view
-
-                function onCurrentIndexChanged() {
-                    resultsView.syncPreview();
-                }
-
-                function onCountChanged() {
-                    resultsView.syncPreview();
-                }
-            }
-
-            delegate: ResultListDelegate {
-                iconSource: modelData.icon || ""
-                title: modelData.path || modelData.name || modelData.id
-
-                onActivated: function (item) {
-                    plugin.openImage(item);
-                }
-            }
-        }
+    function onSearchResultsChanged() {
+        if (plugin.dependencyError.length)
+            plugin.previewItem = null;
     }
 }

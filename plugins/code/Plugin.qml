@@ -2,20 +2,15 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Io
 
-import "../.."
-import "../../components"
-import "../../services"
+import "../file_search"
 
-BasePlugin {
+BaseFileSearchPlugin {
     id: plugin
 
     pluginId: "code"
     bang: "!c"
     displayName: "Code"
-
-    property var codeService: FileSystemSearchService {
-        mode: "dir"
-    }
+    searchMode: "dir"
 
     function openInCode(item) {
         if (!item || !item.path)
@@ -27,27 +22,8 @@ BasePlugin {
         requestClear();
     }
 
-    function onQueryChanged(newQuery) {
-        codeService.search(newQuery);
-    }
-
-    bottomView: Component {
-        ResultListView {
-            model: plugin.codeService.results
-
-            onActivateRequested: function (item) {
-                plugin.openInCode(item);
-            }
-
-            delegate: ResultListDelegate {
-                iconSource: modelData.icon || ""
-                title: modelData.path || modelData.name || modelData.id
-
-                onActivated: function (item) {
-                    plugin.openInCode(item);
-                }
-            }
-        }
+    function activateSearchResult(item) {
+        plugin.openInCode(item);
     }
 
     property var codeOpener: Process {}

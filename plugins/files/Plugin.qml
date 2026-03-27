@@ -1,20 +1,15 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 
-import "../.."
-import "../../components"
-import "../../services"
+import "../file_search"
 
-BasePlugin {
+BaseFileSearchPlugin {
     id: plugin
 
     pluginId: "files"
     bang: "!f"
     displayName: "File"
-
-    property var fileService: FileSystemSearchService {
-        mode: "any"
-    }
+    searchMode: "any"
 
     function openFile(fileItem) {
         if (!fileItem || !fileItem.path)
@@ -25,26 +20,7 @@ BasePlugin {
         requestClear();
     }
 
-    function onQueryChanged(newQuery) {
-        fileService.search(newQuery);
-    }
-
-    bottomView: Component {
-        ResultListView {
-            model: plugin.fileService.results
-
-            onActivateRequested: function (item) {
-                plugin.openFile(item);
-            }
-
-            delegate: ResultListDelegate {
-                iconSource: modelData.icon || ""
-                title: modelData.path || modelData.name || modelData.id
-
-                onActivated: function (item) {
-                    plugin.openFile(item);
-                }
-            }
-        }
+    function activateSearchResult(item) {
+        plugin.openFile(item);
     }
 }

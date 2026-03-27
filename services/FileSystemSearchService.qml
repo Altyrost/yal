@@ -15,9 +15,11 @@ BaseService {
 
     property var results: []
     property var bufferedPaths: []
-    property string pendingQuery: ""
     property string activeQuery: ""
     property string lastRequestedQuery: ""
+    property string dependencyError: ""
+    property string fdBinary: ""
+    property string fzfBinary: ""
 
     function shellQuote(value) {
         const raw = value || "";
@@ -114,15 +116,16 @@ BaseService {
         const limit = String(maxResults);
         const flags = typeFlags();
         const extFlags = extensionFlags(parsed.extensions);
-        const matcher = parsed.searchText.length ? " | fzf --filter " + q : "";
+        const matcher = parsed.searchText.length ? " | " + fzfBinary + " --filter " + q : "";
 
-        return ""
-            + "fd " + flags + " " + extFlags + " --hidden --exclude .git . \"" + rootPath + "\" "
-            + matcher
-            + "| head -n " + limit;
+        return "" + fdBinary + " " + flags + " " + extFlags + " --hidden --exclude .git . \"" + rootPath + "\" " + matcher + " | head -n " + limit;
     }
 
     function executeSearch(query) {
+        if (dependencyError.length) {
+            return;
+        }
+
         const q = (query || "").trim();
         const parsed = parseQuery(q);
         activeQuery = q;
@@ -132,8 +135,7 @@ BaseService {
             searcher.running = false;
 
         const hasExtensionFilter = parsed.extensions.length > 0;
-        if ((parsed.searchText.length === 0 && !hasExtensionFilter)
-            || (parsed.searchText.length > 0 && parsed.searchText.length < minQueryLength)) {
+        if ((parsed.searchText.length === 0 && !hasExtensionFilter) || (parsed.searchText.length > 0 && parsed.searchText.length < minQueryLength)) {
             results = [];
             return;
         }
@@ -147,23 +149,45 @@ BaseService {
             return results;
 
         lastRequestedQuery = q;
-        pendingQuery = q;
-        debounce.restart();
+        executeSearch(q);
         return results;
     }
 
-    property var debounce: Timer {
-        interval: 70
-        repeat: false
+    property var dependencyResolver: Process {
+        stdout: SplitParser {
+            splitMarker: "\n"
 
-        onTriggered: service.executeSearch(service.pendingQuery)
+            onRead: function (data) {
+                const line = (data || "").trim();
+                if (!line.length)
+                    return;
+
+                if (!service.fdBinary.length) {
+                    service.fdBinary = line;
+                    return;
+                }
+
+                if (!service.fzfBinary.length)
+                    service.fzfBinary = line;
+            }
+        }
+
+        onExited: function () {
+            if (!service.fdBinary.length) {
+                service.dependencyError = "Missing search tool: install `fd` or `fdfind`.";
+                return;
+            }
+
+            if (!service.fzfBinary.length)
+                service.dependencyError = "Missing search tool: install `fzf`.";
+        }
     }
 
     property var searcher: Process {
         stdout: SplitParser {
             splitMarker: "\n"
 
-            onRead: function(data) {
+            onRead: function (data) {
                 const path = (data || "").trim();
                 if (path.length === 0)
                     return;
@@ -175,7 +199,7 @@ BaseService {
             }
         }
 
-        onExited: function() {
+        onExited: function () {
             if (service.activeQuery !== service.lastRequestedQuery)
                 return;
 
@@ -193,4 +217,6 @@ BaseService {
             service.results = uniquePaths.map(path => service.toItem(path));
         }
     }
+
+    Component.onCompleted: dependencyResolver.exec(["sh", "-lc", "(command -v fd || command -v fdfind) 2>/dev/null; command -v fzf 2>/dev/null"])
 }
