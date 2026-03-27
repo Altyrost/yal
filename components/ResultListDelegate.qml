@@ -36,7 +36,6 @@ ItemDelegate {
 
     background: Rectangle {
         anchors.fill: parent
-        radius: 10
         color: root.highlighted ? root.highlightColor : "transparent"
     }
 
