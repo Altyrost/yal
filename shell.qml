@@ -79,6 +79,8 @@ PanelWindow {
         x: leftFrame.maxContentWidth + root.gap + Math.round((inputBar.width - width) / 2)
         y: maxContentHeight - height
         z: 1
+        animateWidth: false
+        animateHeight: true
         maxContentWidth: inputBar.barWidth - (contentMargin * 2)
         maxContentHeight: 440
         defaultContentWidth: inputBar.barWidth - (contentMargin * 2)
@@ -91,8 +93,11 @@ PanelWindow {
         x: maxContentWidth - width
         y: topFrame.maxContentHeight + root.gap + inputBar.height + root.gap + Math.round((bottomFrame.maxContentHeight - height) / 2)
         z: 1
+        animateWidth: true
+        animateHeight: false
         maxContentWidth: 220
         maxContentHeight: bottomFrame.maxContentHeight
+        defaultContentHeight: bottomFrame.maxContentHeight
         sourceComponent: root.currentPlugin ? root.currentPlugin.leftView : null
     }
 
@@ -101,8 +106,11 @@ PanelWindow {
         x: leftFrame.maxContentWidth + root.gap + inputBar.barWidth + root.gap
         y: topFrame.maxContentHeight + root.gap + inputBar.height + root.gap + Math.round((bottomFrame.maxContentHeight - height) / 2)
         z: 1
+        animateWidth: true
+        animateHeight: false
         maxContentWidth: 220
         maxContentHeight: bottomFrame.maxContentHeight
+        defaultContentHeight: bottomFrame.maxContentHeight
         sourceComponent: root.currentPlugin ? root.currentPlugin.rightView : null
     }
 
@@ -111,6 +119,8 @@ PanelWindow {
         x: leftFrame.maxContentWidth + root.gap + Math.round((inputBar.barWidth - width) / 2)
         y: topFrame.maxContentHeight + root.gap + inputBar.height + root.gap
         z: 1
+        animateWidth: false
+        animateHeight: true
         maxContentWidth: inputBar.barWidth - (contentMargin * 2)
         maxContentHeight: 284
         defaultContentWidth: inputBar.barWidth - (contentMargin * 2)

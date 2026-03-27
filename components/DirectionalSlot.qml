@@ -11,6 +11,9 @@ Item {
     property color backgroundColor: "#141414"
     property bool clipLoader: false
     property int contentMargin: 4
+    property bool animateWidth: false
+    property bool animateHeight: true
+    property int animationDuration: 240
 
     readonly property var item: contentLoader.item
     readonly property int measuredWidth: Math.round(item ? ((item.implicitWidth !== undefined && item.implicitWidth > 0) ? item.implicitWidth : defaultContentWidth) : 0)
@@ -18,8 +21,10 @@ Item {
     readonly property int innerWidth: maxContentWidth > 0 ? Math.min(measuredWidth, maxContentWidth) : measuredWidth
     readonly property int innerHeight: maxContentHeight > 0 ? Math.min(measuredHeight, maxContentHeight) : measuredHeight
     readonly property bool hasContent: innerWidth > 0 && innerHeight > 0
-    readonly property int contentWidth: hasContent ? innerWidth + (contentMargin * 2) : 0
-    readonly property int contentHeight: hasContent ? innerHeight + (contentMargin * 2) : 0
+    readonly property int hiddenWidth: animateWidth ? 0 : defaultContentWidth + (contentMargin * 2)
+    readonly property int hiddenHeight: animateHeight ? 0 : defaultContentHeight + (contentMargin * 2)
+    readonly property int contentWidth: hasContent ? innerWidth + (contentMargin * 2) : hiddenWidth
+    readonly property int contentHeight: hasContent ? innerHeight + (contentMargin * 2) : hiddenHeight
 
     width: implicitWidth
     height: implicitHeight
@@ -27,15 +32,17 @@ Item {
     implicitHeight: contentHeight
 
     Behavior on implicitWidth {
+        enabled: root.animateWidth
         NumberAnimation {
-            duration: 160
+            duration: root.animationDuration
             easing.type: Easing.OutCubic
         }
     }
 
     Behavior on implicitHeight {
+        enabled: root.animateHeight
         NumberAnimation {
-            duration: 160
+            duration: root.animationDuration
             easing.type: Easing.OutCubic
         }
     }
