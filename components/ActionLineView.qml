@@ -8,7 +8,7 @@ ResultListView {
     property string actionText: ""
     property var itemData: ({})
 
-    model: [root.itemData]
+    model: root.actionText.trim().length ? [root.itemData] : []
 
     delegate: ResultListDelegate {
         showIcon: false
