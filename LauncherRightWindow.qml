@@ -23,7 +23,7 @@ PanelWindow {
     anchors.left: true
     anchors.top: true
     margins.left: shellState.centerLeft(screen) + shellState.centerWidth + shellState.gap
-    margins.top: shellState.centerTop(screen) + shellState.centerHeight + shellState.gap
+    margins.top: shellState.mainStackTop(screen) + shellState.centerHeight + shellState.gap
 
     Rectangle {
         anchors.fill: parent

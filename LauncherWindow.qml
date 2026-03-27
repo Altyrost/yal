@@ -26,7 +26,7 @@ PanelWindow {
     anchors.left: true
     anchors.top: true
     margins.left: shellState.centerLeft(screen)
-    margins.top: shellState.centerTop(screen)
+    margins.top: shellState.mainStackTop(screen)
 
     readonly property var currentPlugin: controller.currentPlugin
     property bool suppressInputTextChange: false
@@ -72,7 +72,7 @@ PanelWindow {
         id: inputBar
         anchors.fill: parent
         radius: 12
-        color: "transparent"
+        color: "black"
 
         RowLayout {
             anchors.fill: parent

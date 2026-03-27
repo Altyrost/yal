@@ -25,6 +25,11 @@ ShellRoot {
         function centerTop(screen) {
             return screen ? Math.max(0, Math.round((screen.height - centerHeight) / 2)) : 0;
         }
+
+        function mainStackTop(screen) {
+            const stackHeight = centerHeight + gap + defaultContentHeight;
+            return screen ? Math.max(0, Math.round((screen.height - stackHeight) / 2)) : 0;
+        }
     }
 
     LauncherWindow {
