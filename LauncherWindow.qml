@@ -29,6 +29,19 @@ PanelWindow {
     margins.top: shellState.mainStackTop(screen)
 
     readonly property var currentPlugin: controller.currentPlugin
+    readonly property string longestPluginDisplayName: {
+        const plugins = root.controller && root.controller.plugins ? root.controller.plugins : [];
+        let longestName = "Mode";
+
+        for (let index = 0; index < plugins.length; ++index) {
+            const plugin = plugins[index];
+            const candidate = plugin && plugin.displayName ? plugin.displayName : "";
+            if (candidate.length > longestName.length)
+                longestName = candidate;
+        }
+
+        return longestName;
+    }
     property bool suppressInputTextChange: false
 
     function closeLauncher() {
@@ -60,6 +73,12 @@ PanelWindow {
         input.forceActiveFocus();
     }
 
+    TextMetrics {
+        id: longestModeMetrics
+        font.pixelSize: modeText.font.pixelSize
+        text: root.longestPluginDisplayName
+    }
+
     Rectangle {
         id: panel
         anchors.fill: parent
@@ -80,7 +99,7 @@ PanelWindow {
 
             Rectangle {
                 id: modePill
-                Layout.preferredWidth: modeText.implicitWidth + 26
+                Layout.preferredWidth: Math.ceil(longestModeMetrics.width) + 26
                 Layout.fillHeight: true
                 color: "#2a2a2a"
                 topLeftRadius: 12
