@@ -14,20 +14,7 @@ BasePlugin {
 
     property var imageService: FileSystemSearchService {
         mode: "file"
-        extensionFilters: [
-            "png",
-            "jpg",
-            "jpeg",
-            "gif",
-            "webp",
-            "bmp",
-            "svg",
-            "avif",
-            "heic",
-            "heif",
-            "tiff",
-            "tif"
-        ]
+        extensionFilters: ["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg", "avif", "heic", "heif", "tiff", "tif"]
     }
     property var previewItem: null
 
@@ -52,9 +39,10 @@ BasePlugin {
     }
 
     topView: Component {
-        Item {
-            implicitHeight: plugin.previewItem ? 440 : 0
-            visible: implicitHeight > 0
+        DirectionnalItem {
+            fillWidth: true
+            fillHeight: true
+            visible: plugin.previewItem !== null
             clip: true
 
             Image {
@@ -77,7 +65,7 @@ BasePlugin {
                 plugin.previewItem = currentItemData();
             }
 
-            onActivateRequested: function(item) {
+            onActivateRequested: function (item) {
                 plugin.openImage(item);
             }
 
@@ -101,7 +89,7 @@ BasePlugin {
                 iconSource: modelData.icon || ""
                 title: modelData.path || modelData.name || modelData.id
 
-                onActivated: function(item) {
+                onActivated: function (item) {
                     plugin.openImage(item);
                 }
             }

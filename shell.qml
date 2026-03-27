@@ -39,8 +39,8 @@ PanelWindow {
         }
     }
 
-    implicitWidth: leftFrame.maxContentWidth + root.gap + inputBar.width + root.gap + rightFrame.maxContentWidth
-    implicitHeight: topFrame.maxContentHeight + root.gap + inputBar.height + root.gap + bottomFrame.maxContentHeight
+    implicitWidth: 1280
+    implicitHeight: 720
 
     readonly property var currentPlugin: controller.currentPlugin
 
@@ -82,12 +82,12 @@ PanelWindow {
         anchors.left: inputBar.left
         anchors.right: inputBar.right
 
+        maximumHeight: inputBar.y
+
         z: 1
         animateWidth: false
         animateHeight: true
 
-        maxContentHeight: 220
-        defaultContentWidth: inputBar.barWidth - (contentMargin * 2)
         sourceComponent: root.currentPlugin ? root.currentPlugin.topView : null
         clipLoader: true
     }
@@ -99,11 +99,11 @@ PanelWindow {
         anchors.top: topFrame.top
         anchors.bottom: bottomFrame.bottom
 
+        maximumWidth: inputBar.x
+
         z: 1
         animateWidth: true
         animateHeight: false
-        maxContentWidth: 220
-        defaultContentHeight: bottomFrame.maxContentHeight
         sourceComponent: root.currentPlugin ? root.currentPlugin.leftView : null
     }
 
@@ -114,12 +114,11 @@ PanelWindow {
         anchors.top: topFrame.top
         anchors.bottom: bottomFrame.bottom
 
+        maximumWidth: parent.width - (inputBar.x + inputBar.width)
+
         z: 1
         animateWidth: true
         animateHeight: false
-        maxContentWidth: 220
-        maxContentHeight: bottomFrame.maxContentHeight
-        defaultContentHeight: bottomFrame.maxContentHeight
         sourceComponent: root.currentPlugin ? root.currentPlugin.rightView : null
     }
 
@@ -130,12 +129,11 @@ PanelWindow {
         anchors.left: inputBar.left
         anchors.right: inputBar.right
 
+        maximumHeight: parent.height - (inputBar.y + inputBar.height)
+
         z: 1
         animateWidth: false
         animateHeight: true
-        maxContentWidth: inputBar.barWidth - (contentMargin * 2)
-        maxContentHeight: 220
-        defaultContentWidth: inputBar.barWidth - (contentMargin * 2)
         sourceComponent: root.currentPlugin ? root.currentPlugin.bottomView : null
     }
 }

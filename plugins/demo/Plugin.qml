@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 
 import "../.."
+import "../../components"
 
 BasePlugin {
     id: plugin
@@ -48,63 +49,51 @@ BasePlugin {
         plugin.dispatchKeyToViews(event, [views.top, views.left, views.right, views.bottom]);
     }
 
-    topView: Component {
-        Item {
-            visible: plugin.showTop
-            implicitHeight: visible ? 140 : 0
-            implicitWidth: visible ? 140 : 0
-
-            Text {
-                anchors.centerIn: parent
-                text: "Top"
-                color: "#ddd7cf"
-                font.pixelSize: 28
-            }
+    topView: DirectionnalItem {
+        visible: plugin.showTop
+        fillWidth: true
+        fillHeight: true
+        Text {
+            anchors.centerIn: parent
+            text: "Top"
+            color: "#ddd7cf"
+            font.pixelSize: 28
         }
     }
 
-    leftView: Component {
-        Item {
-            visible: plugin.showLeft
-            implicitHeight: visible ? 140 : 0
-            implicitWidth: visible ? 140 : 0
-
-            Text {
-                anchors.centerIn: parent
-                text: "Left"
-                color: "#ddd7cf"
-                font.pixelSize: 24
-            }
+    leftView: DirectionnalItem {
+        visible: plugin.showLeft
+        fillWidth: true
+        fillHeight: true
+        Text {
+            anchors.centerIn: parent
+            text: "Left"
+            color: "#ddd7cf"
+            font.pixelSize: 24
         }
     }
 
-    rightView: Component {
-        Item {
-            visible: plugin.showRight
-            implicitHeight: visible ? 140 : 0
-            implicitWidth: visible ? 140 : 0
-
-            Text {
-                anchors.centerIn: parent
-                text: "Right"
-                color: "#ddd7cf"
-                font.pixelSize: 24
-            }
+    rightView: DirectionnalItem {
+        fillWidth: true
+        fillHeight: true
+        visible: plugin.showRight
+        Text {
+            anchors.centerIn: parent
+            text: "Right"
+            color: "#ddd7cf"
+            font.pixelSize: 24
         }
     }
 
-    bottomView: Component {
-        Item {
-            implicitHeight: visible ? 140 : 0
-            implicitWidth: visible ? 140 : 0
-            visible: plugin.showBottom
-
-            Text {
-                anchors.centerIn: parent
-                text: "Bottom"
-                color: "#ddd7cf"
-                font.pixelSize: 28
-            }
+    bottomView: DirectionnalItem {
+        fillWidth: true
+        fillHeight: true
+        visible: plugin.showBottom
+        Text {
+            anchors.centerIn: parent
+            text: "Bottom"
+            color: "#ddd7cf"
+            font.pixelSize: 28
         }
     }
 }

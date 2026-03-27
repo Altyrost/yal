@@ -21,24 +21,22 @@ BasePlugin {
         requestClear();
     }
 
-    bottomView: Component {
-        ResultListView {
-            model: appService.search(plugin.query)
-            onActivateRequested: function (item) {
+    bottomView: ResultListView {
+        model: appService.search(plugin.query)
+        onActivateRequested: function (item) {
+            plugin.launchApp(item);
+        }
+
+        delegate: ResultListDelegate {
+            iconSource: Quickshell.iconPath(modelData.icon || "", true)
+            title: modelData.name || modelData.id
+            onActivated: function (item) {
                 plugin.launchApp(item);
             }
+        }
 
-            delegate: ResultListDelegate {
-                iconSource: Quickshell.iconPath(modelData.icon || "", true)
-                title: modelData.name || modelData.id
-                onActivated: function (item) {
-                    plugin.launchApp(item);
-                }
-            }
-
-            Service {
-                id: appService
-            }
+        Service {
+            id: appService
         }
     }
 }
