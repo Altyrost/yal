@@ -9,8 +9,9 @@ PanelWindow {
     required property QtObject shellState
 
     readonly property var currentPlugin: controller.currentPlugin
+    readonly property bool hasBottomContent: !!(contentLoader.item && contentLoader.item.implicitHeight !== undefined && contentLoader.item.implicitHeight > 0)
 
-    visible: currentPlugin && currentPlugin.bottomView !== null
+    visible: currentPlugin && currentPlugin.bottomView !== null && hasBottomContent
     aboveWindows: true
     focusable: false
     exclusionMode: ExclusionMode.Ignore
