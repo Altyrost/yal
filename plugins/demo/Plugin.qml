@@ -50,9 +50,9 @@ BasePlugin {
 
     topView: Component {
         Item {
-            implicitWidth: 720
-            implicitHeight: plugin.showTop ? 140 : 0
             visible: plugin.showTop
+            implicitHeight: visible ? 140 : 0
+            implicitWidth: visible ? 140 : 0
 
             Text {
                 anchors.centerIn: parent
@@ -65,9 +65,9 @@ BasePlugin {
 
     leftView: Component {
         Item {
-            implicitWidth: plugin.showLeft ? 180 : 0
-            implicitHeight: plugin.showLeft ? 120 : 0
             visible: plugin.showLeft
+            implicitHeight: visible ? 140 : 0
+            implicitWidth: visible ? 140 : 0
 
             Text {
                 anchors.centerIn: parent
@@ -80,9 +80,9 @@ BasePlugin {
 
     rightView: Component {
         Item {
-            implicitWidth: plugin.showRight ? 180 : 0
-            implicitHeight: plugin.showRight ? 120 : 0
             visible: plugin.showRight
+            implicitHeight: visible ? 140 : 0
+            implicitWidth: visible ? 140 : 0
 
             Text {
                 anchors.centerIn: parent
@@ -95,8 +95,8 @@ BasePlugin {
 
     bottomView: Component {
         Item {
-            implicitWidth: 720
-            implicitHeight: plugin.showBottom ? 140 : 0
+            implicitHeight: visible ? 140 : 0
+            implicitWidth: visible ? 140 : 0
             visible: plugin.showBottom
 
             Text {

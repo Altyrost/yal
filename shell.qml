@@ -61,8 +61,9 @@ PanelWindow {
 
     LauncherBar {
         id: inputBar
-        x: leftFrame.maxContentWidth + root.gap
-        y: topFrame.maxContentHeight + root.gap
+
+        anchors.centerIn: parent
+
         barWidth: 720
         barHeight: 48
         z: 1
@@ -76,13 +77,16 @@ PanelWindow {
 
     DirectionalSlot {
         id: topFrame
-        x: leftFrame.maxContentWidth + root.gap + Math.round((inputBar.width - width) / 2)
-        y: maxContentHeight - height
+
+        anchors.bottom: inputBar.top
+        anchors.left: inputBar.left
+        anchors.right: inputBar.right
+
         z: 1
         animateWidth: false
         animateHeight: true
-        maxContentWidth: inputBar.barWidth - (contentMargin * 2)
-        maxContentHeight: 440
+
+        maxContentHeight: 220
         defaultContentWidth: inputBar.barWidth - (contentMargin * 2)
         sourceComponent: root.currentPlugin ? root.currentPlugin.topView : null
         clipLoader: true
@@ -90,21 +94,26 @@ PanelWindow {
 
     DirectionalSlot {
         id: leftFrame
-        x: maxContentWidth - width
-        y: topFrame.maxContentHeight + root.gap + inputBar.height + root.gap + Math.round((bottomFrame.maxContentHeight - height) / 2)
+
+        anchors.right: inputBar.left
+        anchors.top: topFrame.top
+        anchors.bottom: bottomFrame.bottom
+
         z: 1
         animateWidth: true
         animateHeight: false
         maxContentWidth: 220
-        maxContentHeight: bottomFrame.maxContentHeight
         defaultContentHeight: bottomFrame.maxContentHeight
         sourceComponent: root.currentPlugin ? root.currentPlugin.leftView : null
     }
 
     DirectionalSlot {
         id: rightFrame
-        x: leftFrame.maxContentWidth + root.gap + inputBar.barWidth + root.gap
-        y: topFrame.maxContentHeight + root.gap + inputBar.height + root.gap + Math.round((bottomFrame.maxContentHeight - height) / 2)
+
+        anchors.left: inputBar.right
+        anchors.top: topFrame.top
+        anchors.bottom: bottomFrame.bottom
+
         z: 1
         animateWidth: true
         animateHeight: false
@@ -116,13 +125,16 @@ PanelWindow {
 
     DirectionalSlot {
         id: bottomFrame
-        x: leftFrame.maxContentWidth + root.gap + Math.round((inputBar.barWidth - width) / 2)
-        y: topFrame.maxContentHeight + root.gap + inputBar.height + root.gap
+
+        anchors.top: inputBar.bottom
+        anchors.left: inputBar.left
+        anchors.right: inputBar.right
+
         z: 1
         animateWidth: false
         animateHeight: true
         maxContentWidth: inputBar.barWidth - (contentMargin * 2)
-        maxContentHeight: 284
+        maxContentHeight: 220
         defaultContentWidth: inputBar.barWidth - (contentMargin * 2)
         sourceComponent: root.currentPlugin ? root.currentPlugin.bottomView : null
     }
