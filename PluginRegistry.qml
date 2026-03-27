@@ -5,6 +5,7 @@ import "plugins/files" as Files
 import "plugins/images" as Images
 import "plugins/bangs" as Bangs
 import "plugins/calc" as Calc
+import "plugins/demo" as Demo
 import "plugins/web/google" as Google
 import "plugins/web/youtube" as Youtube
 import "plugins/web/wikipedia" as Wikipedia
@@ -28,6 +29,7 @@ QtObject {
         Files.Plugin {},
         Images.Plugin {},
         Calc.Plugin {},
+        Demo.Plugin {},
         Google.Plugin {},
         Youtube.Plugin {},
         Wikipedia.Plugin {},
