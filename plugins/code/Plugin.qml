@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Io
 
-import "../file_search"
+import qs.plugins.file_search
 
 BaseFileSearchPlugin {
     id: plugin

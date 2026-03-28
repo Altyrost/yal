@@ -1,6 +1,7 @@
 import Quickshell
 import QtQuick
-import "../../"
+
+import qs
 
 BaseService {
     function search(query) {

@@ -1,16 +1,16 @@
 import QtQuick
-import "plugins/apps" as Apps
-import "plugins/code" as Code
-import "plugins/files" as Files
-import "plugins/images" as Images
-import "plugins/bangs" as Bangs
-import "plugins/calc" as Calc
-import "plugins/demo" as Demo
-import "plugins/web/google" as Google
-import "plugins/web/youtube" as Youtube
-import "plugins/web/wikipedia" as Wikipedia
-import "plugins/web/cpp" as Cpp
-import "plugins/web/qt" as QtDocs
+import qs.plugins.apps as Apps
+import qs.plugins.code as Code
+import qs.plugins.files as Files
+import qs.plugins.images as Images
+import qs.plugins.bangs as Bangs
+import qs.plugins.calc as Calc
+import qs.plugins.demo as Demo
+import qs.plugins.web.google as Google
+import qs.plugins.web.youtube as Youtube
+import qs.plugins.web.wikipedia as Wikipedia
+import qs.plugins.web.cpp as Cpp
+import qs.plugins.web.qt as QtDocs
 
 QtObject {
     id: root

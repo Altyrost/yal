@@ -1,7 +1,7 @@
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
-import "components"
+import qs.components
 
 PanelWindow {
     id: root

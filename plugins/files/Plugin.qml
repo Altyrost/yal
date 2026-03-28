@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 
-import "../file_search"
+import qs.plugins.file_search
 
 BaseFileSearchPlugin {
     id: plugin

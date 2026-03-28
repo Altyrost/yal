@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Io
-import ".."
+
+import qs
 
 BaseService {
     id: service
