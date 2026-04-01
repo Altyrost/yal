@@ -1,8 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 
-import "../../.."
-import ".."
+import qs.plugins.web
 
 BaseWebSearchPlugin {
     id: plugin
