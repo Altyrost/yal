@@ -13,12 +13,7 @@ BaseService {
 
         return apps.filter(app => {
             const name = (app.name || "").toLowerCase();
-            const genericName = (app.genericName || "").toLowerCase();
-            const exec = (app.command || []).join(" ").toLowerCase();
-            const keywords = (app.keywords || []).join(" ").toLowerCase();
-            const desktopId = (app.id || "").toLowerCase();
-
-            return name.includes(q) || genericName.includes(q) || exec.includes(q) || keywords.includes(q) || desktopId.includes(q);
+            return name.includes(q);
         });
     }
 }
