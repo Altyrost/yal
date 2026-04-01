@@ -66,13 +66,17 @@ PanelWindow {
     LauncherBar {
         id: inputBar
 
+        FontMetrics {
+            id: fm
+        }
+
         anchors.top: parent.top
         anchors.topMargin: parent.height / 10 * 4
         anchors.left: parent.left
         anchors.leftMargin: parent.width / 2 - inputBar.width / 2
 
-        barWidth: 720
-        barHeight: 48
+        barWidth: fm.averageCharacterWidth * 60
+        barHeight: fm.capitalHeight + 40
         z: 1
         controller: root.controller
         currentPlugin: root.currentPlugin
