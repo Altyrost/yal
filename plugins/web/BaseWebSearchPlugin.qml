@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 
-import "../.."
-import "../../components"
+import qs
+import qs.components
 
 BasePlugin {
     id: plugin
