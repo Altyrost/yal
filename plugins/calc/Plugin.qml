@@ -1,5 +1,5 @@
 pragma ComponentBehavior: Bound
-import Quickshell
+import Quickshell.Io
 import QtQuick
 
 import qs
@@ -77,10 +77,18 @@ BasePlugin {
         if (!item || !item.isValid)
             return;
 
-        Quickshell.clipboardText = String(item.value);
+        const resultText = String(item.value);
+        clipboardCopier.command = ["wl-copy", resultText];
+        clipboardCopier.startDetached();
+        notificationSender.command = ["notify-send", "Yal - calc", "result copied!"];
+        notificationSender.startDetached();
         requestClose();
         requestClear();
     }
+
+    property var clipboardCopier: Process {}
+
+    property var notificationSender: Process {}
 
     bottomView: Component {
         ActionLineView {
