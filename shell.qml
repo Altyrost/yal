@@ -66,7 +66,10 @@ PanelWindow {
     LauncherBar {
         id: inputBar
 
-        anchors.centerIn: parent
+        anchors.top: parent.top
+        anchors.topMargin: parent.height / 10 * 4
+        anchors.left: parent.left
+        anchors.leftMargin: parent.width / 2 - inputBar.width / 2
 
         barWidth: 720
         barHeight: 48
