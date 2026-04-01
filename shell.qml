@@ -6,6 +6,13 @@ import qs.components
 PanelWindow {
     id: root
 
+    anchors {
+        left: true
+        bottom: true
+        right: true
+        top: true
+    }
+
     property var controller: LauncherController {}
     property int gap: 0
     readonly property var topViewItem: topFrame.item
@@ -38,9 +45,6 @@ PanelWindow {
             item: bottomFrame
         }
     }
-
-    implicitWidth: 1280
-    implicitHeight: 720
 
     readonly property var currentPlugin: controller.currentPlugin
 
